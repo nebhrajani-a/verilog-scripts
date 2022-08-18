@@ -1,0 +1,46 @@
+#!/usr/bin/env python3
+
+import argparse
+import os
+
+parser = argparse.ArgumentParser(
+    description='Script to rename file and change Verilog module name. '
+    'Assumes one module per file, and that module names and '
+    'filenames must be identical.')
+parser.add_argument(
+    'filename',
+    type=str,
+    help='File to vrename (must have extension `.v` or `.sv`).')
+parser.add_argument(
+    'new_name',
+    type=str,
+    help='New module and filename (with extension `.v` or `.sv`).')
+args = parser.parse_args()
+
+for name in [args.filename, args.new_name]:
+    split_name = name.split('.')
+    extension_is_valid = False
+    if len(split_name) >= 2:
+        extension_is_valid = split_name[-1] in ['v', 'sv']
+
+    assert extension_is_valid, f'{name} must have extension `.v` or `.sv`.'
+
+with open(args.filename, "r") as f:
+    contents = f.readlines()
+
+filtered = list(
+    filter(lambda s: "module" in s and "endmodule" not in s, contents))
+assert len(filtered) == 1, 'There must be only one module per file.'
+target = filtered[0]
+assert args.filename.split(
+    ".")[0] in target, 'Module name must match filename in original file.'
+
+target = target.replace(
+    args.filename.split('.')[0],
+    args.new_name.split('.')[0])
+edited = [target if line == filtered[0] else line for line in contents]
+
+with open(args.new_name, "w") as f:
+    f.writelines(edited)
+
+os.remove(args.filename)
