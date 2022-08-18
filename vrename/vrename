@@ -6,7 +6,8 @@ import os
 parser = argparse.ArgumentParser(
     description='Script to rename file and change Verilog module name. '
     'Assumes one module per file, and that module names and '
-    'filenames must be identical.')
+    'filenames must be identical. Does some non-exhaustive checking to '
+    'ensure that this is true.')
 parser.add_argument(
     'filename',
     type=str,
@@ -14,7 +15,7 @@ parser.add_argument(
 parser.add_argument(
     'new_name',
     type=str,
-    help='New module and filename (with extension `.v` or `.sv`).')
+    help='New filename (with extension `.v` or `.sv`).')
 args = parser.parse_args()
 
 for name in [args.filename, args.new_name]:
