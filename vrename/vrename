@@ -12,10 +12,9 @@ parser.add_argument(
     'filename',
     type=str,
     help='File to vrename (must have extension `.v` or `.sv`).')
-parser.add_argument(
-    'new_name',
-    type=str,
-    help='New filename (with extension `.v` or `.sv`).')
+parser.add_argument('new_name',
+                    type=str,
+                    help='New filename (with extension `.v` or `.sv`).')
 args = parser.parse_args()
 
 for name in [args.filename, args.new_name]:
